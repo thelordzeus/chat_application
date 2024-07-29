@@ -1,4 +1,4 @@
-import 'package:chat_application/auth/auth_gate.dart';
+import 'package:chat_application/services/auth/auth_gate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
