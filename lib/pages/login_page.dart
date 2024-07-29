@@ -1,3 +1,4 @@
+import 'package:chat_application/auth/auth_service.dart';
 import 'package:chat_application/components/button_custom.dart';
 import 'package:chat_application/components/text_field_custom.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,24 @@ class LoginPage extends StatelessWidget {
   LoginPage({super.key, required this.onTap});
 
   // login method
-  void login() {}
+  void login(BuildContext context) async {
+    // auth service
+    final AuthService authService = AuthService();
+
+    try {
+      await authService.signInWithEmailPassword(
+          _emailController.text, _passwordController.text);
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(
+            e.toString(),
+          ),
+        ),
+      );
+    }
+  }
 
   // register method
   void register() {}
@@ -75,7 +93,7 @@ class LoginPage extends StatelessWidget {
 
             CButton(
               text: "Login",
-              onTap: login,
+              onTap: () => login(context),
             ),
 
             const SizedBox(
