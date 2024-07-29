@@ -17,12 +17,8 @@ class AuthService {
   }
 
   // sign up
-  Future<UserCredential> signUpWithEmailPassword(
-      String email, password, confirmPassword) async {
+  Future<UserCredential> signUpWithEmailPassword(String email, password) async {
     try {
-      if (password != confirmPassword) {
-        throw Exception('Passwords do not match');
-      }
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
       return userCredential;

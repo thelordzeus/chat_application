@@ -3,38 +3,48 @@ import 'package:chat_application/components/button_custom.dart';
 import 'package:chat_application/components/text_field_custom.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
-  // email and password controller
+class LoginPage extends StatefulWidget {
+  final void Function()? onTap;
+
+  const LoginPage({super.key, required this.onTap});
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // tap to go to register page
-  final void Function()? onTap;
-
-  LoginPage({super.key, required this.onTap});
-
   // login method
-  void login(BuildContext context) async {
+  Future<void> login() async {
     // auth service
     final AuthService authService = AuthService();
 
     try {
       await authService.signInWithEmailPassword(
-          _emailController.text, _passwordController.text);
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(
-            e.toString(),
-          ),
-        ),
+        _emailController.text,
+        _passwordController.text,
       );
+    } catch (e) {
+      // Check if the widget is still in the tree
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Login Error'),
+            content: Text(e.toString()),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
-
-  // register method
-  void register() {}
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +61,7 @@ class LoginPage extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
 
-            const SizedBox(
-              height: 50,
-            ),
+            const SizedBox(height: 50),
 
             //welcome back message
             Text(
@@ -64,44 +72,35 @@ class LoginPage extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(
-              height: 50,
-            ),
+            const SizedBox(height: 50),
 
-            // pw textfield
+            // email textfield
             CTextField(
               hintText: "Email",
               obscureText: false,
               controller: _emailController,
             ),
 
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
 
+            // password textfield
             CTextField(
               hintText: "Password",
               obscureText: true,
               controller: _passwordController,
             ),
 
-            const SizedBox(
-              height: 25,
-            ),
+            const SizedBox(height: 25),
 
             //login button
-
             CButton(
               text: "Login",
-              onTap: () => login(context),
+              onTap: login,
             ),
 
-            const SizedBox(
-              height: 25,
-            ),
+            const SizedBox(height: 25),
 
             //register now
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -111,7 +110,7 @@ class LoginPage extends StatelessWidget {
                       TextStyle(color: Theme.of(context).colorScheme.primary),
                 ),
                 GestureDetector(
-                  onTap: onTap,
+                  onTap: widget.onTap,
                   child: Text(
                     "Register Now!",
                     style: TextStyle(
