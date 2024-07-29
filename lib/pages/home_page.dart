@@ -1,4 +1,3 @@
-import 'package:chat_application/auth/auth_service.dart';
 import 'package:chat_application/components/drawer_custom.dart';
 import 'package:flutter/material.dart';
 
