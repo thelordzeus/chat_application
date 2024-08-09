@@ -58,4 +58,17 @@ class ChatService {
   }
 
   // get messages
+  Stream<QuerySnapshot> getMessages(String userID, otherUserID) {
+    // construct a chatroom ID for the tow users
+    List<String> id = [userID, otherUserID];
+    id.sort();
+    String chatRoomID = id.join('_');
+
+    return _firestore
+        .collection("chat_rooms")
+        .doc(chatRoomID)
+        .collection("messages")
+        .orderBy("timestamp", descending: false)
+        .snapshots();
+  }
 }
