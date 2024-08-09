@@ -1,3 +1,4 @@
+import 'package:chat_application/components/chat_bubble.dart';
 import 'package:chat_application/components/text_field_custom.dart';
 import 'package:chat_application/services/auth/auth_service.dart';
 import 'package:chat_application/services/chat/chat_service.dart';
@@ -88,7 +89,7 @@ class ChatPage extends StatelessWidget {
 
     return Container(
       alignment: alignment,
-      child: Text(data["message"]),
+      child: ChatBubble(message: data["message"], isCurrentUser: isCurrentUser),
     );
   }
 
