@@ -71,4 +71,12 @@ class ChatService {
         .orderBy("timestamp", descending: false)
         .snapshots();
   }
+
+  // Report User
+
+  // Block User
+
+  //Unblock User
+
+  //Get Blocked User Stream
 }
