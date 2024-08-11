@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:chat_application/firebase_options.dart';
-import 'package:chat_application/themes/light_mode.dart';
+
 import 'package:provider/provider.dart';
 
 void main() async {
