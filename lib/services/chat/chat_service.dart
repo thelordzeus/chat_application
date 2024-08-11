@@ -10,22 +10,43 @@ class ChatService extends ChangeNotifier {
 
   // get all  user stream
   Stream<List<Map<String, dynamic>>> getUsersSteam() {
-    return _firestore.collection("Users").snapshots().map(
-      (snapshot) {
-        return snapshot.docs.map(
-          (doc) {
-            // go through each individual user
-            final user = doc.data();
+    return _firestore.collection("Users").snapshots().map((snapshot) {
+      return snapshot.docs
+          .where((doc) => doc.data()['email'] != _auth.currentUser!.email)
+          .map((doc) => doc.data())
+          .toList();
+    });
+  }
 
-            // return the user
-            return user;
-          },
-        ).toList();
+  // GET all uses stream except blocked users
+  Stream<List<Map<String, dynamic>>> getUsersStreamExcludingBlocked() {
+    final currentUser = _auth.currentUser;
+
+    return _firestore
+        .collection('Users')
+        .doc(currentUser!.uid)
+        .collection('BlockedUsers')
+        .snapshots()
+        .asyncMap(
+      (snapshot) async {
+        // get list of blocked user ids
+        final blockedUsersIds = snapshot.docs.map((doc) => doc.id).toList();
+
+        // get all users
+
+        final userSnapshot = await _firestore.collection('Users').get();
+
+        // return as stream list of users excluding blocked users
+        return userSnapshot.docs
+            .where((doc) =>
+                doc.data()['email'] != currentUser.email &&
+                !blockedUsersIds.contains(doc.id))
+            .map((doc) => doc.data())
+            .toList();
       },
     );
   }
 
-  // GET all uses stream except blocked users
   // send message
   Future<void> sendMessage(String receiverID, message) async {
     // get the current user info
